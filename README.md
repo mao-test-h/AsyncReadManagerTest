@@ -1,0 +1,2 @@
+# AsyncReadManagerTest
+AsyncReadManagerTestを用いたファイル読み込み/データキャッシュテスト
