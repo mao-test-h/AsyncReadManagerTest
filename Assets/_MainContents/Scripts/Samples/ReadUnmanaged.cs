@@ -217,8 +217,8 @@ namespace MainContents
             var source = new NativeArray<byte>((int)this._readCommand[0].Size, Allocator.Temp);
 
             // 全データ数のカウント及びNativeArrayへの入れ直し
-            int iterator = 0;
             {
+                int iterator = 0;
                 int maxRecordCount = 0; // 全データ数
                 while (true)
                 {
@@ -230,7 +230,6 @@ namespace MainContents
                     ++iterator;
                 }
                 this._charaData = new NativeArray<CharacterData>(maxRecordCount, Allocator.Persistent);
-                iterator = 0;
             }
 
             // パース
@@ -239,10 +238,11 @@ namespace MainContents
             int recordCount = 0;                    // レコード数
             var parseData = new CharacterData();    // 解析したデータを格納
             int sliceIndex = 0;                     // NativeSlice用の開始位置
-            while (true)
+            // TODO: Job化を検討できそう
+            for (int i = 0; i < source.Length; ++i)
             {
                 // こちらも同じく1byteずつチェック。
-                byte val = Marshal.ReadByte((IntPtr)ptr, iterator);
+                byte val = source[i];
 
                 // 終端が来たら終わり
                 if (val == NullCode) { break; }
@@ -298,11 +298,10 @@ namespace MainContents
                     ++rowIndex;
                 }
 
-                ++iterator;
                 if (val == CommaCode || val == LineFeedCode)
                 {
                     // カンマ及び改行コードの次をindexをスライス開始位置とする。
-                    sliceIndex = iterator;
+                    sliceIndex = i + 1;
                 }
             }
             source.Dispose();
