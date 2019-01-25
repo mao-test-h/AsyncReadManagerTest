@@ -165,7 +165,7 @@ namespace MainContents
             {
                 Offset = 0,
                 Size = fileSize,
-                Buffer = UnsafeUtility.Malloc(fileSize, 16, Allocator.Persistent),
+                Buffer = UnsafeUtility.Malloc(fileSize, UnsafeUtility.AlignOf<byte>(), Allocator.Persistent),
             };
 
             // 読み込み開始
@@ -318,7 +318,7 @@ namespace MainContents
         StringPtr SliceToStringPtr(NativeArray<byte> source, int start, int length, Allocator allocator)
         {
             var slice = new NativeSlice<byte>(source, start, length);
-            byte* arrPtr = (byte*)UnsafeUtility.Malloc(length, 16, allocator);
+            byte* arrPtr = (byte*)UnsafeUtility.Malloc(length, UnsafeUtility.AlignOf<byte>(), allocator);
             UnsafeUtility.MemClear(arrPtr, length);
             UnsafeUtility.MemCpy(arrPtr, NativeSliceUnsafeUtility.GetUnsafePtr(slice), length);
             return new StringPtr { Data = arrPtr, Length = length };

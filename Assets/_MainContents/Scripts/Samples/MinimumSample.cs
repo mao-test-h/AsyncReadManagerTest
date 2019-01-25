@@ -40,7 +40,7 @@
             {
                 Offset = 0,
                 Size = fileSize,
-                Buffer = (byte*)UnsafeUtility.Malloc(fileSize, 16, Allocator.Persistent),
+                Buffer = (byte*)UnsafeUtility.Malloc(fileSize, UnsafeUtility.AlignOf<byte>(), Allocator.Persistent),
             };
 
             // 読み込み開始
